@@ -2,3 +2,5 @@ jupyter
 RISE
 pytest
 hypothesis
+selenium
+furl
