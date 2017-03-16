@@ -65,10 +65,11 @@ def get_cells_from_file(file_path):
     """
     with open(file_path, encoding='utf-8') as f:
         source_lines, cell_kwargs, in_cell = [], {}, False
-        for line in f:
+        for line_number, line in enumerate(f):
             if line.startswith('#%'):
                 # start of a cell
                 if not in_cell:
+                    logging.debug(f'Cell found in {os.path.basename(file_path)} @ {line_number}')
                     in_cell = True
                 # start of cell definition
                 elif not cell_kwargs:
@@ -78,7 +79,7 @@ def get_cells_from_file(file_path):
                         source_lines, cell_kwargs, in_cell = [], {}, False
                     else:
                         source_lines = []
-                # source defined by what follows the header
+                # source defined by lines between definition and the final #%
                 else:
                     cell_kwargs['source'] = ''.join(source_lines).strip()
                     yield cell_kwargs
@@ -93,7 +94,8 @@ if __name__ == '__main__':
 
     with open('presentation.ipynb', 'w') as f:
         cells = get_cells_from_files_in_path('.')
-        notebook = nbformat.v4.new_notebook(cells=cells)
+        metadata = { "livereveal": { "scroll": True, "theme": "Simple", "transition": "fade" } }
+        notebook = nbformat.v4.new_notebook(cells=cells, metadata=metadata)
         nbformat.write(notebook, f)
 
     import time
@@ -111,16 +113,13 @@ if __name__ == '__main__':
 
     jupyter, url = start_jupyter()
 
+    os.environ['PATH'] = os.pathsep.join([os.environ['PATH'], os.path.dirname(__file__)])
     driver = webdriver.Firefox()
     driver.get(url)
     url = furl.furl(url)
     url = str(url.remove(['token'])) + 'notebooks/presentation.ipynb'
     driver.get(url)
-    # TODO : run all
-    # TODO : clear output
-    # TODO : start RISE
-    # TODO : remove menu
-    # TODO : full screen
+    # TODO : When run as presentation, run all, clear output, start rise, hide menu, go fullscreen
 
     try:
         while 1: time.sleep(1)
