@@ -1,0 +1,7 @@
+#!/home/moagstar/Projects/property-based-testing/.venv.3.6/bin/python3.6
+#
+# Stub script to run jsbeautifier
+#
+import sys
+from jsbeautifier import main
+sys.exit(main())
