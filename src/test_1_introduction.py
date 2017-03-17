@@ -122,7 +122,7 @@ import pytest
 examples = ['hello', 'python', 'uhm...']
 
 @pytest.mark.parametrize('input_data', examples)
-def test_parameterized_run_length_encode(input_data):
+def test_parameterized_run_length_encode_decode(input_data):
     assert decode(encode(input_data)) == input_data
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,16 +130,7 @@ def test_parameterized_run_length_encode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_parameterized_run_length_encode -q"
-#%
-
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# cell_type: code
-# metadata:
-#   slideshow:
-#     slide_type: "-"
-# source: "!py.test -k test_parameterized_run_length_decode -q"
+# source: "!py.test -k test_parameterized_run_length_encode_decode -q"
 #%
 
 
