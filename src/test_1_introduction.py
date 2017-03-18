@@ -2,6 +2,66 @@
 # cell_type: markdown
 # metadata:
 #   slideshow:
+#     slide_type: slide
+# source: |
+#   # Property Based Testing
+#   ## (Using Hypothesis)<br><br><br>
+#   ### Amsterdam Python Meetup
+#   ### 27 April 2017<br><br><br>
+#   ### Daniel Bradburn
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+# source: "* Property based testing"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "* Choosing properties"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "* Generating data"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "* Model based testing"
+#%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "* Django"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "* Real world examples"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
 #     slide_type: notes
 # source: say we have a run length encoding function. We encode a string as characters and the number of consecutive occurrences of that character. let's just test this out with something simple
 #%
