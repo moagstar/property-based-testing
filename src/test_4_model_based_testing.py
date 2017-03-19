@@ -1,6 +1,8 @@
+from hypothesis import strategies as st
+from hypothesis.stateful import RuleBasedStateMachine, rule, precondition
 
 
-class CircularBuffer(object):
+class Queue(object):
 
     def __init__(self, max_size):
         self._buffer = [None] * max_size
@@ -19,23 +21,19 @@ class CircularBuffer(object):
         return (self._in - self._out) % self.max_size
 
 
-from hypothesis import strategies as st
-from hypothesis.stateful import RuleBasedStateMachine, Bundle, rule, precondition, run_state_machine_as_test
+# Example 1 - Bug in model
 
+class QueueMachine(RuleBasedStateMachine):
 
-import collections
-
-class CircularBufferMachine(RuleBasedStateMachine):
-
-    SystemUnderTest, Model = CircularBuffer, collections.deque
+    SystemUnderTest, Model = Queue, list
     system_under_test, model, max_size = None, None, 0
 
     @precondition(lambda self: self.system_under_test is None)
     @rule(max_size=st.integers(min_value=1, max_value=10))
     def new(self, max_size):
-        self.max_size = max_size
         self.system_under_test = self.SystemUnderTest(max_size)
         self.model = self.Model()
+        self.max_size = max_size
 
     @precondition(lambda self: self.system_under_test is not None)
     @rule(item=st.integers())
@@ -43,10 +41,11 @@ class CircularBufferMachine(RuleBasedStateMachine):
         self.system_under_test.put(item)
         self.model.append(item)
 
-    @precondition(lambda self: self.system_under_test is not None and len(self.model))
+    @precondition(lambda self: self.system_under_test is not None
+                               and len(self.model))
     @rule()
     def get(self):
-        assert self.system_under_test.get() == self.model.popleft()
+        assert self.system_under_test.get() == self.model.pop()
 
     @precondition(lambda self: self.system_under_test is not None)
     @rule()
@@ -54,32 +53,42 @@ class CircularBufferMachine(RuleBasedStateMachine):
         assert self.system_under_test.size() == len(self.model)
 
 
-class CircularBufferMachine2(CircularBufferMachine):
+test_example_1 = QueueMachine.TestCase
+
+
+# Example 2 - Bug in System Under Test
+
+class QueueMachine2(QueueMachine):
+
+    @precondition(lambda self: self.system_under_test is not None)
+    @rule(item=st.integers())
+    def put(self, item):
+        self.system_under_test.put(item)
+        self.model.insert(0, item)
+
+test_example_2 = QueueMachine2.TestCase
+
+
+# Example 3 - Bug in Specification
+
+class Queue2(Queue):
+    def __init__(self, max_size):
+        super(Queue2, self).__init__(max_size + 1)
+
+class QueueMachine3(QueueMachine2):
+    SystemUnderTest = Queue2
+
+test_example_3 = QueueMachine3.TestCase
+
+
+# Example 4 - Fixed
+
+class QueueMachine4(QueueMachine3):
 
     @precondition(lambda self: self.system_under_test is not None
                                and len(self.model) < self.max_size)
     @rule(item=st.integers())
     def put(self, item):
-        super(CircularBufferMachine2, self).put(item)
+        super(QueueMachine4, self).put(item)
 
-
-class CircularBuffer2(CircularBuffer):
-
-    def __init__(self, max_size):
-        super(CircularBuffer2, self).__init__(max_size + 1)
-
-
-class CircularBufferMachine3(CircularBufferMachine2):
-
-    SystemUnderTest = CircularBuffer2
-
-
-
-def test_sm():
-    run_state_machine_as_test(CircularBufferMachine)
-
-def test_sm2():
-    run_state_machine_as_test(CircularBufferMachine2)
-
-def test_sm3():
-    run_state_machine_as_test(CircularBufferMachine3)
+test_example_4 = QueueMachine4.TestCase
