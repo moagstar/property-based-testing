@@ -74,17 +74,6 @@ class CircularBufferMachine3(CircularBufferMachine2):
     SystemUnderTest = CircularBuffer2
 
 
-class CircularBuffer3(CircularBuffer2):
-
-    def size(self):
-        return (self._in - self._out + self.max_size) % self.max_size
-
-
-class CircularBufferMachine4(CircularBufferMachine2):
-
-    SystemUnderTest = CircularBuffer3
-
-
 
 def test_sm():
     run_state_machine_as_test(CircularBufferMachine)
@@ -94,7 +83,3 @@ def test_sm2():
 
 def test_sm3():
     run_state_machine_as_test(CircularBufferMachine3)
-
-def test_sm4():
-    run_state_machine_as_test(CircularBufferMachine4)
-
