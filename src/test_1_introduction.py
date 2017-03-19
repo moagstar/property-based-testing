@@ -16,46 +16,42 @@
 # metadata:
 #   slideshow:
 #     slide_type: subslide
-# source: "* Property based testing"
-#%
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# cell_type: markdown
-# metadata:
-#   slideshow:
-#     slide_type: fragment
-# source: "* Choosing properties"
-#%
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# cell_type: markdown
-# metadata:
-#   slideshow:
-#     slide_type: fragment
-# source: "* Generating data"
-#%
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# cell_type: markdown
-# metadata:
-#   slideshow:
-#     slide_type: fragment
-# source: "* Model based testing"
+# source: "Property based testing"
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # cell_type: markdown
 # metadata:
 #   slideshow:
 #     slide_type: fragment
-# source: "* Django"
+# source: "Choosing properties"
 #%
-
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # cell_type: markdown
 # metadata:
 #   slideshow:
 #     slide_type: fragment
-# source: "* Real world examples"
+# source: "Generating data"
+#%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "Model based testing"
+#%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "Django"
+#%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: fragment
+# source: "Examples"
 #%
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,5 +277,5 @@ def test_property_based_run_length_encode_fixed_decode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_fuzzed_run_length_encode_decode -q"
+# source: "!py.test -k test_property_based_run_length_encode_fixed_decode -q"
 #%

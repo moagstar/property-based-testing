@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     with open('presentation.ipynb', 'w') as f:
         cells = get_cells_from_files_in_path('.')
-        metadata = { "livereveal": { "scroll": True, "theme": "Simple", "transition": "fade" } }
+        metadata = { "livereveal": { "scroll": True, "theme": "black", "transition": "fade" } }
         notebook = nbformat.v4.new_notebook(cells=cells, metadata=metadata)
         nbformat.write(notebook, f)
 
