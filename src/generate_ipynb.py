@@ -75,6 +75,7 @@ def get_cells_from_file(file_path):
                 elif not cell_kwargs:
                     cell_kwargs = parse_cell_kwargs(source_lines)
                     if 'source' in cell_kwargs:
+                        cell_kwargs['source'] = cell_kwargs['source'].strip()
                         yield cell_kwargs
                         source_lines, cell_kwargs, in_cell = [], {}, False
                     else:

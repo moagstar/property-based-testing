@@ -7,7 +7,7 @@
 #   # Property Based Testing
 #   ## (Using Hypothesis)<br><br><br>
 #   ### Amsterdam Python Meetup
-#   ### 27 April 2017<br><br><br>
+#   ### 26 April 2017<br><br><br>
 #   ### Daniel Bradburn
 #%
 
@@ -65,7 +65,7 @@
 # cell_type: code
 # metadata:
 #   slideshow:
-#     slide_type: subslide
+#     slide_type: slide
 #%
 def encode(input_string):
     count = 1
@@ -143,7 +143,7 @@ def test_run_length_encode():
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_run_length_encode -q"
+# source: "!sh pytest_run.sh test_run_length_encode "
 #%
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,7 +163,7 @@ def test_run_length_decode():
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_run_length_decode -q"
+# source: "!sh pytest_run.sh test_run_length_decode"
 #%
 
 
@@ -186,7 +186,7 @@ def test_parameterized_run_length_encode_decode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_parameterized_run_length_encode_decode -q"
+# source: "!sh pytest_run.sh test_parameterized_run_length_encode_decode"
 #%
 
 
@@ -214,7 +214,7 @@ def test_fuzzed_run_length_encode_decode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_fuzzed_run_length_encode_decode -q"
+# source: "!sh pytest_run.sh test_fuzzed_run_length_encode_decode"
 #%
 
 
@@ -236,7 +236,7 @@ def test_property_based_run_length_encode_decode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_property_based_run_length_encode_decode -q"
+# source: "!sh pytest_run.sh test_property_based_run_length_encode_decode"
 #%
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -269,7 +269,7 @@ def encode_fixed(input_string):
 #     slide_type: subslide
 #%
 @given(st.text())
-def test_property_based_run_length_encode_fixed_decode(input_data):
+def test_property_based_run_length_encode_decode_fixed(input_data):
     assert decode(encode_fixed(input_data)) == input_data
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -277,5 +277,5 @@ def test_property_based_run_length_encode_fixed_decode(input_data):
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_property_based_run_length_encode_fixed_decode -q"
+# source: "!sh pytest_run.sh test_property_based_run_length_encode_decode_fixed"
 #%

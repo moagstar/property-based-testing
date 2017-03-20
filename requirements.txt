@@ -4,3 +4,4 @@ pytest
 hypothesis
 selenium
 furl
+pyyaml

@@ -36,6 +36,7 @@ class Queue(object):
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 #%
 # cell_type: code
 # metadata:
@@ -47,37 +48,36 @@ from hypothesis.stateful import RuleBasedStateMachine, rule, precondition
 
 class QueueMachine(RuleBasedStateMachine):
 
-    SystemUnderTest, Model = Queue, list
-    system_under_test, model, max_size = None, None, 0
+    Actual, Model = Queue, list
 
-    @precondition(lambda self: self.system_under_test is None)
+    def is_created(self): return hasattr(self, 'actual')
+    def is_not_empty(self): return self.is_created() and len(self.model)
+
+    @precondition(lambda self: not self.is_created())
     @rule(max_size=st.integers(min_value=1, max_value=10))
     def new(self, max_size):
-        self.system_under_test = self.SystemUnderTest(max_size)
-        self.model = self.Model()
+        self.actual, self.model = self.Actual(max_size), self.Model()
         self.max_size = max_size
 
-    @precondition(lambda self: self.system_under_test is not None)
+    @precondition(is_created)
     @rule(item=st.integers())
     def put(self, item):
-        self.system_under_test.put(item)
+        self.actual.put(item)
         self.model.append(item)
 
-    @precondition(lambda self: self.system_under_test is not None
-                               and len(self.model))
+    @precondition(is_not_empty)
     @rule()
     def get(self):
-        actual = self.system_under_test.get()
-        model = self.model.pop()
+        actual, model = self.actual.get(), self.model.pop()
         assert actual == model
 
-    @precondition(lambda self: self.system_under_test is not None)
+    @precondition(is_created)
     @rule()
     def size(self):
-        actual = len(self.system_under_test)
-        model = len(self.model)
+        actual, model = len(self.actual), len(self.model)
         assert actual == model
 #%
+test_model_based_1 = QueueMachine.TestCase
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,16 +90,10 @@ class QueueMachine(RuleBasedStateMachine):
 # cell_type: code
 # metadata:
 #   slideshow:
-#     slide_type: subslide
-#%
-test_model_based_1 = QueueMachine.TestCase
-#%
-#%
-# cell_type: code
-# metadata:
-#   slideshow:
-#     slide_type: "-"
-# source: "!py.test -k test_model_based_1 -q --tb short"
+#     slide_type: "subslide"
+# source: |
+#   test_model_based_1 = QueueMachine.TestCase
+#   !sh pytest_run.sh test_model_based_1
 #%
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,27 +111,30 @@ test_model_based_1 = QueueMachine.TestCase
 #%
 class QueueMachine2(QueueMachine):
 
-    @precondition(lambda self: self.system_under_test is not None)
+
+
+    @precondition(lambda self: self.is_created())
     @rule(item=st.integers())
     def put(self, item):
-        self.system_under_test.put(item)
+        self.actual.put(item)
         self.model.insert(0, item)
 #%
-    SystemUnderTest = lambda s, x: Queue(x + 1)
-#%
-# cell_type: code
-# metadata:
-#   slideshow:
-#     slide_type: "-"
-#%
+    # this is a cheat, really the order in which the errors would be encountered
+    # would be model, system, spec - for a nice narrative we want the errors
+    # to appear in the order model, spec, system. So just fix the system under
+    # test here like this
+    Actual = lambda s, x: Queue(x + 1)
+
 test_model_based_2 = QueueMachine2.TestCase
-#%
+
 #%
 # cell_type: code
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_model_based_2 -q --tb short"
+# source: |
+#   test_model_based_2 = QueueMachine2.TestCase
+#   !sh pytest_run.sh test_model_based_2
 #%
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,29 +152,28 @@ test_model_based_2 = QueueMachine2.TestCase
 #%
 class QueueMachine3(QueueMachine2):
 
-    @precondition(lambda self: self.system_under_test is not None
-                               and len(self.model) < self.max_size)
+    def is_not_full(self):
+        return self.is_created() and len(self.model) < self.max_size
+
+    @precondition(is_not_full)
     @rule(item=st.integers())
     def put(self, item):
-        super(QueueMachine3, self).put(item)
+        self.actual.put(item)
+        self.model.insert(0, item)
 #%
-    SystemUnderTest = Queue
-#%
-# cell_type: code
-# metadata:
-#   slideshow:
-#     slide_type: "-"
-#%
-test_model_based_3 = QueueMachine3.TestCase
-#%
-#%
-# cell_type: code
-# metadata:
-#   slideshow:
-#     slide_type: "-"
-# source: "!py.test -k test_model_based_3 -q --tb short"
-#%
+    Actual = Queue
 
+test_model_based_3 = QueueMachine3.TestCase
+
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: |
+#   test_model_based_3 = QueueMachine3.TestCase
+#   !sh pytest_run.sh test_model_based_3
+#%
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
@@ -196,14 +192,17 @@ class Queue2(Queue):
         super(Queue2, self).__init__(max_size + 1)
 
 class QueueMachine4(QueueMachine3):
-    SystemUnderTest = Queue2
+    Actual = Queue2
+#%
 
 test_model_based_4 = QueueMachine4.TestCase
-#%
+
 #%
 # cell_type: code
 # metadata:
 #   slideshow:
 #     slide_type: "-"
-# source: "!py.test -k test_model_based_4 -q --tb short"
+# source: |
+#   test_model_based_4 = QueueMachine4.TestCase
+#   !sh pytest_run.sh test_model_based_4
 #%
