@@ -1,7 +1,15 @@
-from hypothesis import strategies as st
-from hypothesis.stateful import RuleBasedStateMachine, rule, precondition
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# System Under Test
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: slide
+#%
 class Queue(object):
 
     def __init__(self, max_size):
@@ -17,11 +25,25 @@ class Queue(object):
         self._out = (self._out + 1) % self.max_size
         return result
 
-    def size(self):
+    def __len__(self):
         return (self._in - self._out) % self.max_size
+#%
 
 
-# Example 1 - Bug in model
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Model / Specification / Test Code
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+#%
+from hypothesis import strategies as st
+from hypothesis.stateful import RuleBasedStateMachine, rule, precondition
 
 class QueueMachine(RuleBasedStateMachine):
 
@@ -45,19 +67,54 @@ class QueueMachine(RuleBasedStateMachine):
                                and len(self.model))
     @rule()
     def get(self):
-        assert self.system_under_test.get() == self.model.pop()
+        actual = self.system_under_test.get()
+        model = self.model.pop()
+        assert actual == model
 
     @precondition(lambda self: self.system_under_test is not None)
     @rule()
     def size(self):
-        assert self.system_under_test.size() == len(self.model)
+        actual = len(self.system_under_test)
+        model = len(self.model)
+        assert actual == model
+#%
 
 
-test_example_1 = QueueMachine.TestCase
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Demonstrate a bug in the Model
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+#%
+test_model_based_1 = QueueMachine.TestCase
+#%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!py.test -k test_model_based_1 -q --tb short"
+#%
 
-# Example 2 - Bug in System Under Test
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Fix bug in Model,
+# Demonstrate a bug in the Specification
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+#%
 class QueueMachine2(QueueMachine):
 
     @precondition(lambda self: self.system_under_test is not None)
@@ -65,30 +122,88 @@ class QueueMachine2(QueueMachine):
     def put(self, item):
         self.system_under_test.put(item)
         self.model.insert(0, item)
+#%
+    SystemUnderTest = lambda s, x: Queue(x + 1)
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+#%
+test_model_based_2 = QueueMachine2.TestCase
+#%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!py.test -k test_model_based_2 -q --tb short"
+#%
 
-test_example_2 = QueueMachine2.TestCase
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Fix bug in the Specification,
+# Demonstrate a bug in the System Under Test
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-# Example 3 - Bug in Specification
-
-class Queue2(Queue):
-    def __init__(self, max_size):
-        super(Queue2, self).__init__(max_size + 1)
-
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+#%
 class QueueMachine3(QueueMachine2):
-    SystemUnderTest = Queue2
-
-test_example_3 = QueueMachine3.TestCase
-
-
-# Example 4 - Fixed
-
-class QueueMachine4(QueueMachine3):
 
     @precondition(lambda self: self.system_under_test is not None
                                and len(self.model) < self.max_size)
     @rule(item=st.integers())
     def put(self, item):
-        super(QueueMachine4, self).put(item)
+        super(QueueMachine3, self).put(item)
+#%
+    SystemUnderTest = Queue
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+#%
+test_model_based_3 = QueueMachine3.TestCase
+#%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!py.test -k test_model_based_3 -q --tb short"
+#%
 
-test_example_4 = QueueMachine4.TestCase
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Fixed
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+#%
+class Queue2(Queue):
+    def __init__(self, max_size):
+        super(Queue2, self).__init__(max_size + 1)
+
+class QueueMachine4(QueueMachine3):
+    SystemUnderTest = Queue2
+
+test_model_based_4 = QueueMachine4.TestCase
+#%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!py.test -k test_model_based_4 -q --tb short"
+#%
