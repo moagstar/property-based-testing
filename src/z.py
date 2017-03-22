@@ -14,6 +14,6 @@
 #     slide_type: notes
 # source: |
 #   %%HTML
-#   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
-#   <style>body { font-family: 'Poppins', serif !important; }</style>
+#   <link href="https://fonts.googleapis.com/css?family=ABeeZee" rel="stylesheet">
+#   <style>body { font-family: 'ABeeZee', serif !important; }</style>
 #%

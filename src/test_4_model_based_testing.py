@@ -37,10 +37,8 @@ class Queue(object):
 #   slideshow:
 #     slide_type: subslide
 #%
-operations = 'new', 'put', 'get', 'size'
-
 import itertools
-
+operations = 'new', 'put', 'get', 'size'
 list(itertools.permutations(operations))
 #%
 
