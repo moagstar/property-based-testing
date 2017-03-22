@@ -1,3 +1,11 @@
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: slide
+# source: "## Data generation"
+#%
+
 from hypothesis import strategies as st
 
 # built in strategies
@@ -15,3 +23,12 @@ st.recursive(nodes, children).example()
 @st.composite
 def composite_strategy(draw):
     pass
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+# source: "Summary (TODO)"
+#%

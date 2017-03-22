@@ -58,6 +58,14 @@
 # cell_type: markdown
 # metadata:
 #   slideshow:
+#     slide_type: slide
+# source: "## Property Based Testing"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
 #     slide_type: notes
 # source: say we have a run length encoding function. We encode a string as characters and the number of consecutive occurrences of that character. let's just test this out with something simple
 #%
@@ -65,7 +73,7 @@
 # cell_type: code
 # metadata:
 #   slideshow:
-#     slide_type: slide
+#     slide_type: subslide
 #%
 def encode(input_string):
     count = 1
@@ -278,4 +286,12 @@ def test_property_based_run_length_encode_decode_fixed(input_data):
 #   slideshow:
 #     slide_type: "-"
 # source: "!sh pytest_run.sh test_property_based_run_length_encode_decode_fixed"
+#%
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# cell_type: markdown
+# metadata:
+#   slideshow:
+#     slide_type: subslide
+# source: "Summary (TODO)"
 #%
