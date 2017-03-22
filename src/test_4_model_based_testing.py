@@ -37,7 +37,7 @@ class Queue(object):
 #   slideshow:
 #     slide_type: subslide
 #%
-operations = 'new', 'put', 'get', 'set'
+operations = 'new', 'put', 'get', 'size'
 
 import itertools
 

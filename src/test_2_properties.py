@@ -1,4 +1,4 @@
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: markdown
 # metadata:
 #   slideshow:
@@ -6,10 +6,7 @@
 # source: "## Property patterns"
 #%
 
-
-# Round and around (inversion)
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
@@ -21,10 +18,15 @@ from hypothesis import given, strategies as st
 def test_round_and_around(c):
     assert c[::-1][::-1] == c
 #%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_round_and_around"
+#%
 
-# Different paths, same destination
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
@@ -34,11 +36,15 @@ def test_round_and_around(c):
 def test_different_paths_same_destination_add(x, y):
     assert x + y == y + x
 #%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_different_paths_same_destination_add"
+#%
 
-
-# There and back again (round-trip)
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
@@ -53,9 +59,15 @@ def test_there_and_back_again_encode_decode(t):
     assert t.encode('utf-8').decode('utf-8') == t
 #%
 
-# Some things never change (invariants)
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_there_and_back_again"
+#%
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
@@ -70,10 +82,15 @@ def test_some_things_never_change(c):
     assert heappop(c) == smallest
 #%
 
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_some_things_never_change"
+#%
 
-# The more things change the more they stay the same (idempotency)
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
@@ -84,30 +101,51 @@ def test_the_more_things_change_the_more_they_stay_the_same(c):
     assert set(c) == set(set(c))
 #%
 
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_the_more_things_change_the_more_they_stay_the_same"
+#%
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
 #     slide_type: subslide
 #%
-# Hard to prove, easy to verify
+def test_hard_to_prove_easy_to_verify():
+    pass
 #%
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_hard_to_prove_easy_to_verify"
+#%
+
+#%
 # cell_type: code
 # metadata:
 #   slideshow:
 #     slide_type: subslide
 #%
-# Two heads are better than one (Test oracle)
+def test_two_heads_are_better_than_one():
+    pass
 #%
 
+#%
+# cell_type: code
+# metadata:
+#   slideshow:
+#     slide_type: "-"
+# source: "!sh pytest_run.sh test_two_heads_are_better_than_one"
+#%
 
-
-
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%
 # cell_type: markdown
 # metadata:
 #   slideshow:
