@@ -16,19 +16,19 @@ class Queue(object):
 
     def __init__(self, max_size):
         self._buffer = [None] * max_size
-        self._in, self._out, self.max_size = 0, 0, max_size
+        self._in, self._out, self._max_size = 0, 0, max_size
 
     def put(self, item):
         self._buffer[self._in] = item
-        self._in = (self._in + 1) % self.max_size
+        self._in = (self._in + 1) % self._max_size
 
     def get(self):
         result = self._buffer[self._out]
-        self._out = (self._out + 1) % self.max_size
+        self._out = (self._out + 1) % self._max_size
         return result
 
     def __len__(self):
-        return (self._in - self._out) % self.max_size
+        return (self._in - self._out) % self._max_size
 #%
 
 #%
