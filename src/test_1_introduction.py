@@ -89,7 +89,7 @@ def encode(input_string):
             count += 1
     else:
         lst.append((character, count))
-    return lst
+    return ''.join(x + str(n) for x, n in lst)
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # cell_type: code
@@ -115,7 +115,19 @@ encode('hello')
 #     slide_type: subslide
 #%
 def decode(lst):
-    return ''.join(c * n for c, n in lst)
+    curr_digits = ''
+    curr_letter = ''
+    output = ''
+    for c in lst:
+        if c.isdigit():
+            curr_digits += c
+        else:
+            if curr_digits:
+                output += curr_letter * int(curr_digits)
+            curr_letter = c
+            curr_digits = ''
+    output += curr_letter * int(curr_digits)
+    return output
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # cell_type: code
@@ -123,7 +135,7 @@ def decode(lst):
 #   slideshow:
 #     slide_type: fragment
 #%
-decode([('h', 1), ('e', 1), ('l', 2), ('o', 1)])
+decode('h1e1l2o1')
 #%
 
 
@@ -141,8 +153,8 @@ decode([('h', 1), ('e', 1), ('l', 2), ('o', 1)])
 #     slide_type: subslide
 #%
 def test_run_length_encode():
-    input_data = "hello"
-    expected = [('h', 1), ('e', 1), ('l', 2), ('o', 1)]
+    input_data = 'hello'
+    expected = 'h1e1l2o1'
     actual = encode(input_data)
     assert actual == expected
 #%
@@ -161,8 +173,8 @@ def test_run_length_encode():
 #     slide_type: subslide
 #%
 def test_run_length_decode():
-    input_data = [('h', 1), ('e', 1), ('l', 2), ('o', 1)]
-    expected = "hello"
+    input_data = 'h1e1l2o1'
+    expected = 'hello'
     actual = decode(input_data)
     assert actual == expected
 #%
@@ -232,8 +244,7 @@ def test_fuzzed_run_length_encode_decode(input_data):
 #   slideshow:
 #     slide_type: subslide
 #%
-from hypothesis import strategies as st
-from hypothesis import given
+from hypothesis import strategies as st, given, assume
 
 @given(st.text())
 def test_property_based_run_length_encode_decode(input_data):
@@ -268,7 +279,7 @@ def encode_fixed(input_string):
             count += 1
     else:
         lst.append((character, count))
-    return lst
+    return ''.join(x + str(n) for x, n in lst)
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # cell_type: code
@@ -278,6 +289,7 @@ def encode_fixed(input_string):
 #%
 @given(st.text())
 def test_property_based_run_length_encode_decode_fixed(input_data):
+    print(input_data)
     assert decode(encode_fixed(input_data)) == input_data
 #%
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

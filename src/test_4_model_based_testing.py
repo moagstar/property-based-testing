@@ -325,7 +325,7 @@ test_model_based_4 = QueueMachine4.TestCase
 # metadata:
 #   slideshow:
 #     slide_type: subslide
-# source: ""
+# source: "&nbsp;"
 #%
 #%
 # cell_type: markdown

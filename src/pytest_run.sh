@@ -1,4 +1,4 @@
-py.test -k $1 -q --tb short                                         \
+py.test -q --tb short -k $*                                         \
     | sed s:^=====:\\n:                                             \
     | sed s:=====$:\\n:                                             \
     | sed s:^_____:\\n:                                             \
