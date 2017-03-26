@@ -229,6 +229,21 @@ class QueueMachine(RuleBasedStateMachine):
 test_model_based_1 = QueueMachine.TestCase
 
 
+class Queue2(Queue):
+    def __init__(self, max_size):
+        super().__init__(max_size + 1)
+    
+class QueueMachine(QueueMachine):
+    Actual = Queue2
+    
+# this is a total cheat, the order in which the errors would naturally occur is 
+# system under test, model, specification. However the narrative is a little
+# better when presented as model, specification, system under test, so secretly
+# fix the bug with the system under test here
+        
+test_model_based_1 = QueueMachine.TestCase
+
+
 class QueueMachine2(QueueMachine):
 
     @precondition(QueueMachine.is_created)
@@ -238,6 +253,11 @@ class QueueMachine2(QueueMachine):
         self.model.insert(0, item)
         
 test_model_based_2 = QueueMachine2.TestCase
+
+
+class QueueMachine2(QueueMachine):
+    # undo the cheating fix
+    Actual = Queue
 
 
 class QueueMachine3(QueueMachine2):
