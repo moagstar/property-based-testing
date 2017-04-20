@@ -74,11 +74,11 @@ class NotebookLoader(object):
             # this particularly useful trick...
             # https://twitter.com/brandon_rhodes/status/843998606113890305
             code = '\n\n'.join(codes)
-            with open('test.py', 'w') as f:
+            with open('test_run.py', 'w') as f:
                 f.write(code)
 
             # compile and execute code
-            code = compile(code, 'test.py', 'exec')
+            code = compile(code, 'test_run.py', 'exec')
             exec(code, mod.__dict__)
 
         finally:
@@ -109,4 +109,4 @@ class NotebookFinder(object):
 
 sys.meta_path.append(NotebookFinder())
 
-from presentation import *
+import presentation
