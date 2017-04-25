@@ -206,6 +206,7 @@ def st_isin_codes(draw):
     return from_natid(country_code, natid)
 
 
+@settings(verbosity=Verbosity.verbose)
 @given(st.lists(st_isin_codes()), st.lists(st.text()), st.randoms())
 def check_property_extract_isin_codes_2(isins, tokens, random):
     
