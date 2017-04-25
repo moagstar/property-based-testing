@@ -74,7 +74,7 @@ def test_fuzzed_run_length_encode_decode(text):
 from hypothesis import strategies as st, given
 
 @given(st.text())
-def test_property_based_run_length_encode_decode(text):
+def check_property_rle_encode_decode_should_round_trip(text):
     assert decode(encode(text)) == text
 
 
@@ -98,7 +98,14 @@ def encode_fixed(text):
 
 
 @given(st.text())
-def test_property_based_fixed_run_length_encode_decode(text):
+def check_property_fixed_rle_encode_decode_should_round_trip(text):
+    assert decode(encode_fixed(text)) == text
+
+
+from string import digits
+
+@given(st.text(st.characters(blacklist_characters=digits)))
+def check_property_nonum_rle_encode_decode_should_round_trip(text):
     assert decode(encode_fixed(text)) == text
 
 
@@ -106,7 +113,7 @@ from hypothesis import settings, Verbosity
 
 @settings(verbosity=Verbosity.verbose)
 @given(st.text())
-def test_property_based_show_encode_decode(text):
+def check_property_verbose_rle_encode_decode_should_round_trip(text):
     assert decode(encode_fixed(text)) == text
 
 
@@ -119,46 +126,44 @@ def test_fuzzed_more_run_length_encode_decode(text):
     assert decode(encode_fixed(text)) == text
 
 
-from string import digits
-
-@given(st.text(st.characters(blacklist_characters=digits)))
-def test_property_based_no_digits_run_length_encode_decode(text):
-    assert decode(encode_fixed(text)) == text
+@given(st.text())
+def check_property_dont_explode(text):
+    text.encode('ascii')
 
 
 @given(st.text())
-def test_there_and_back_again(text):
+def check_property_there_and_back_again(text):
     assert text.encode('utf-8').decode('utf-8') == text
 
 
 @given(st.lists(st.integers(), min_size=1))
-def test_round_and_around(c):
+def check_property_round_and_around(c):
     assert c[::-1][::-1] == c
 
 
 @given(st.integers(), st.integers())
-def test_different_paths_same_destination(x, y):
+def check_property_different_paths_same_destination(x, y):
     assert x + y == y + x
 
 
 from heapq import heapify, heappop
 
 @given(st.lists(st.integers(), min_size=1))
-def test_some_things_never_change(c):
+def check_property_some_things_never_change(c):
     smallest = min(c)
     heapify(c)
     assert heappop(c) == smallest
 
 
 @given(st.lists(st.integers()))
-def test_the_more_things_change_the_more_they_stay_the_same(c):
+def check_property_the_more_things_change_the_more_they_stay_the_same(c):
     assert set(c) == set(set(c))
 
 
 from dataset import connect
 
 @given(st.lists(st.integers(min_value=0, max_value=1e6), min_size=1))
-def test_two_heads_are_better_than_one(numbers):
+def check_property_two_heads_are_better_than_one(numbers):
     
     db = connect('sqlite:///:memory:')
     db['nums'].insert_many({'num': x} for x in numbers)
@@ -186,7 +191,7 @@ from hypothesis import given, strategies as st
 
 @settings(verbosity=Verbosity.verbose)
 @given(st.text())
-def test_1_extract_isin_codes(text):
+def check_property_extract_isin_codes_1(text):
     extract_isin_codes(text)
 
 
@@ -202,7 +207,7 @@ def st_isin_codes(draw):
 
 
 @given(st.lists(st_isin_codes()), st.lists(st.text()), st.randoms())
-def test_2_extract_isin_codes(isins, tokens, random):
+def check_property_extract_isin_codes_2(isins, tokens, random):
     
     tokens += isins
     random.shuffle(tokens)
@@ -233,7 +238,7 @@ st_text_with_isins = st.builds(TextWithIsins,
 
 @settings(verbosity=Verbosity.verbose)
 @given(st_text_with_isins)
-def test_3_extract_isin_codes(text_with_isins):
+def check_property_extract_isin_codes_3(text_with_isins):
     actual = sorted(extract_isin_codes(repr(text_with_isins)))
     expected = sorted(text_with_isins.isins)
     assert actual == expected 
@@ -275,7 +280,7 @@ class QueueStateMachine(RuleBasedStateMachine):
     is_not_empty = lambda self: hasattr(self, 'model')                                 and self.model
     
     @precondition(is_not_created)
-    @rule(max_size=st.integers(min_value=1, max_value=5))
+    @rule(max_size=st.integers(min_value=1, max_value=10))
     def new(self, max_size):
         self.actual = self.Actual(max_size) 
         self.model = self.Model()
@@ -308,7 +313,7 @@ class QueueStateMachine(QueueStateMachine):
         def __init__(self, max_size):
             super().__init__(max_size + 1)
             
-test_queue_stateful_1 = QueueStateMachine.TestCase
+check_property_queue_matches_model_1 = QueueStateMachine.TestCase
 
 
 class QueueStateMachine2(QueueStateMachine):
@@ -321,7 +326,7 @@ class QueueStateMachine2(QueueStateMachine):
     def put(self, item):
         super().put(item)
         
-test_queue_stateful_2 = QueueStateMachine2.TestCase
+check_property_queue_matches_model_2 = QueueStateMachine2.TestCase
 
 
 class QueueStateMachine2(QueueStateMachine2):
@@ -336,7 +341,7 @@ class QueueStateMachine3(QueueStateMachine2):
     def put(self, item):
         self.actual.put(item), self.model.insert(0, item)
         
-test_queue_stateful_3 = QueueStateMachine3.TestCase
+check_property_queue_matches_model_3 = QueueStateMachine3.TestCase
 
 
 def put(self, item):
@@ -351,4 +356,4 @@ class Queue2(Queue):
 class QueueStateMachine4(QueueStateMachine3):
     Actual = Queue2
     
-test_queue_stateful_4 = QueueStateMachine4.TestCase
+check_property_queue_matches_model_4 = QueueStateMachine4.TestCase
