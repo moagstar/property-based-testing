@@ -60,13 +60,14 @@ from random import seed, choice, randint
 
 seed(0)
 
-randletter = lambda _: chr(choice(range(32, 255)))
-randrange  = lambda length: range(randint(0, length))
-randchars  = lambda max_len: map(randletter, randrange(max_len))
-randword   = lambda max_len: ''.join(randchars(max_len))
-randwords  = lambda n, max_len: (randword(max_len) for _ in range(n))
+def randwords(num, max_len):
+    CHARS = list(map(chr, range(32, 255)))
+    for _ in range(num):
+        randrange = range(randint(0, max_len))
+        randchars = (choice(CHARS) for _ in randrange)
+        yield ''.join(randchars)
 
-@pytest.mark.parametrize('text', randwords(n=5, max_len=5))
+@pytest.mark.parametrize('text', randwords(num=5, max_len=5))
 def test_fuzzed_run_length_encode_decode(text):
     assert decode(encode(text)) == text
 
@@ -121,7 +122,7 @@ from random import seed
 
 seed(0)
 
-@pytest.mark.parametrize('text', randwords(n=5, max_len=15))
+@pytest.mark.parametrize('text', randwords(num=5, max_len=15))
 def test_fuzzed_more_run_length_encode_decode(text):
     assert decode(encode_fixed(text)) == text
 
@@ -250,19 +251,19 @@ class Queue(object):
 
     def __init__(self, max_size):
         self._buffer = [None] * max_size
-        self._in, self._out, self.max_size = 0, 0, max_size
+        self._in, self._out, self._max_size = 0, 0, max_size
 
     def put(self, item):
         self._buffer[self._in] = item
-        self._in = (self._in + 1) % self.max_size
+        self._in = (self._in + 1) % self._max_size
 
     def get(self):
         result = self._buffer[self._out]
-        self._out = (self._out + 1) % self.max_size
+        self._out = (self._out + 1) % self._max_size
         return result
 
     def __len__(self):
-        return (self._in - self._out) % self.max_size
+        return (self._in - self._out) % self._max_size 
 
 
 import itertools
@@ -281,7 +282,7 @@ class QueueStateMachine(RuleBasedStateMachine):
     is_not_empty = lambda self: hasattr(self, 'model')                                 and self.model
     
     @precondition(is_not_created)
-    @rule(max_size=st.integers(min_value=1, max_value=10))
+    @rule(max_size=st.integers(min_value=1, max_value=5))
     def new(self, max_size):
         self.actual = self.Actual(max_size) 
         self.model = self.Model()
@@ -347,7 +348,7 @@ check_property_queue_matches_model_3 = QueueStateMachine3.TestCase
 
 def put(self, item):
     self._buffer[self._in] = item
-    self._in = (self._in + 1) % self.max_size
+    self._in = (self._in+ 1) % self.max_size
 
 
 class Queue2(Queue):
