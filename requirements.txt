@@ -5,3 +5,6 @@ hypothesis
 selenium
 furl
 pyyaml
+jupyter_contrib_nbextensions
+dataset
+python-stdnum
